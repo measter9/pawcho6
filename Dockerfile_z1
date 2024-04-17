@@ -1,0 +1,18 @@
+# syntax=docker/dockerfile:experimental
+FROM scratch
+ARG VERSION
+ENV APP_VERSION=test.${VERSION:-v0}
+ADD alpine-minirootfs-3.19.1-aarch64.tar /
+RUN apk up-date & apk upgrade
+RUN apk add --update npm
+RUN apk add --no-cache openssh-client git
+WORKDIR /usr/app
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+RUN --mount=type=ssh,id=mysecret git clone git@github.com:measter9/pawcho5.git .
+RUN npm install
+EXPOSE 3000
+CMD [ "npm", "start" ]
+
+# docker build --secret id=mysecret,src=../../gh_token_lab.txt  -f Dockerfile_z1 -t lab6:v0 .
+
+# docker run -h=myhostanme -d --name lab5z1 -p 3000:3000 lab5:v0

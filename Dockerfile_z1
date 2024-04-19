@@ -8,11 +8,11 @@ RUN apk add --update npm
 RUN apk add --no-cache openssh-client git
 WORKDIR /usr/app
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-RUN --mount=type=ssh,id=mysecret git clone git@github.com:measter9/pawcho5.git .
+RUN --mount=type=ssh git clone git@github.com:measter9/pawcho5.git .
 RUN npm install
 EXPOSE 3000
 CMD [ "npm", "start" ]
 
-# docker build --secret id=mysecret,src=../../gh_token_lab.txt  -f Dockerfile_z1 -t lab6:v0 .
+# docker build --ssh default  -f Dockerfile_z1 -t ghcr.io/measter9/lab6:v0 .
 
-# docker run -h=myhostanme -d --name lab5z1 -p 3000:3000 lab5:v0
+# docker run -h=myhostanme -d --name lab6 -p 3000:3000 ghcr.io/measter9/lab6:v0
